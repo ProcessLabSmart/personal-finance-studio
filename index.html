@@ -1,3 +1,263 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Finance Studio | ProcessLabSmart</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f1f5f9; color: #203247; }
+    header { background: #123e53; color: white; padding: 20px 6%; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+    .brand { font-weight: bold; font-size: 19px; }
+    select { padding: 9px; border-radius: 7px; border: 1px solid #d0dbe2; font-size: 14px; }
+    main { max-width: 900px; margin: 65px auto; padding: 0 20px; text-align: center; }
+    h1 { font-size: clamp(30px, 5vw, 44px); margin-bottom: 12px; }
+    .motto { color: #237b80; font-weight: bold; font-size: 19px; }
+    .intro { color: #586b7d; line-height: 1.7; margin: 25px auto 35px; max-width: 650px; }
+    .panel { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px #20324712; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+    .btn { display: inline-block; padding: 14px 22px; border: 0; border-radius: 9px; text-decoration: none; font-weight: bold; background: #e8f1f5; color: #18475c; cursor: pointer; font-size: 14px; }
+    .btn.primary { background: #126078; color: white; }
+    .btn:hover { filter: brightness(.94); }
+    .guides { border-top: 1px solid #e2e9ee; margin-top: 30px; padding-top: 24px; }
+    .note { font-size: 13px; color: #637789; line-height: 1.6; }
+    footer { margin: 45px 0 20px; text-align: center; color: #718394; font-size: 13px; }
+    .consent { position: fixed; bottom: 14px; left: 14px; right: 14px; max-width: 800px; margin: auto; padding: 20px; background: white; border: 1px solid #d3e1e8; border-radius: 12px; box-shadow: 0 5px 25px #123e5333; z-index: 10; }
+    .consent p { line-height: 1.55; margin: 8px 0 16px; font-size: 14px; }
+    .consent .actions { justify-content: flex-start; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">ProcessLabSmart</div>
+    <select id="language" aria-label="Language">
+      <option value="ro">Română</option>
+      <option value="en">English</option>
+    </select>
+  </header>
+  <main>
+    <h1>Personal Finance Studio</h1>
+    <p class="motto">Change with purpose. Improve with impact.</p>
+    <p class="intro" id="intro"></p>
+    <section class="panel">
+      <h2 id="startTitle"></h2>
+      <div class="actions">
+        <a class="btn primary" id="openApp" href="Personal_Finance_Studio_Public_Beta_06.html"></a>
+        <a class="btn" id="downloadApp" href="Personal_Finance_Studio_Public_Beta_06.html" download></a>
+      </div>
+      <div class="guides">
+        <h2 id="guideTitle"></h2>
+        <div class="actions">
+          <a class="btn" href="Ghid_Utilizare_Personal_Finance_Studio_Public_Beta_06.pdf" download>📄 Ghid Română (PDF)</a>
+          <a class="btn" href="Personal_Finance_Studio_Public_Beta_06_User_Guide_EN%20%281%29.pdf" download>📄 English Guide (PDF)</a>
+        </div>
+      </div>
+    </section>
+    <p class="note" id="privacy"></p>
+    <p><button class="btn" id="privacySettings" type="button"></button></p>
+  </main>
+  <footer>© ProcessLabSmart · Personal Finance Studio</footer>
+  <section class="consent" id="consentPanel" aria-label="Analytics preferences" hidden>
+    <strong id="consentTitle"></strong>
+    <p id="consentDescription"></p>
+    <div class="actions">
+      <button class="btn primary" id="acceptAnalytics" type="button"></button>
+      <button class="btn" id="rejectAnalytics" type="button"></button>
+    </div>
+  </section>
+  <script>
+    const GA_ID = 'G-SS2W8CH2J5';
+    const CONSENT_KEY = 'processlabsmart_analytics_consent_v1';
+    const translations = {
+      ro: {
+        intro: 'Planifică-ți bugetul, urmărește veniturile, cheltuielile și economiile și analizează-ți finanțele într-o aplicație simplă și intuitivă.',
+        startTitle: 'Începe să îți organizezi finanțele', openApp: 'Deschide aplicația', downloadApp: 'Descarcă aplicația HTML',
+        guideTitle: 'Ghiduri de utilizare',
+        privacy: 'Datele financiare sunt salvate local în browser. Folosește exportul JSON pentru copii de siguranță. Aplicația este în versiune de test.',
+        privacySettings: 'Preferințe de confidențialitate', consentTitle: 'Statistici opționale',
+        consentDescription: 'Cu acordul tău, folosim Google Analytics pentru a măsura vizitele și descărcările de pe această pagină. Nu transmitem valorile bugetului tău. Poți refuza sau schimba alegerea oricând.',
+        acceptAnalytics: 'Accept statistici', rejectAnalytics: 'Refuz statistici'
+      },
+      en: {
+        intro: 'Plan your budget, track your income, expenses and savings, and understand your finances with a simple and intuitive application.',
+        startTitle: 'Start managing your finances', openApp: 'Open Application', downloadApp: 'Download HTML Application',
+        guideTitle: 'User Guides',
+        privacy: 'Financial data is stored locally in your browser. Use JSON export for backups. This application is currently a beta version.',
+        privacySettings: 'Privacy preferences', consentTitle: 'Optional analytics',
+        consentDescription: 'With your permission, we use Google Analytics to measure visits and downloads on this page. We do not send your budget amounts. You may decline or change your choice at any time.',
+        acceptAnalytics: 'Accept analytics', rejectAnalytics: 'Decline analytics'
+      }
+    };
+    function setLanguage(lang) {
+      const t = translations[lang] || translations.ro;
+      document.documentElement.lang = lang;
+      ['intro','startTitle','openApp','downloadApp','guideTitle','privacy','privacySettings','consentTitle','consentDescription','acceptAnalytics','rejectAnalytics']
+        .forEach(id => { document.getElementById(id).textContent = t[id]; });
+    }
+    document.getElementById('language').addEventListener('change', e => setLanguage(e.target.value));
+    setLanguage('ro');
+
+    let analyticsLoaded = false;
+    function startAnalytics() {
+      if (analyticsLoaded) return;
+      analyticsLoaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA_ID, { send_page_view: true });
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+      document.head.appendChild(script);
+    }
+    const panel = document.getElementById('consentPanel');
+    function saveChoice(choice) {
+      try { localStorage.setItem(CONSENT_KEY, choice); } catch (_) { /* private browsing */ }
+      panel.hidden = true;
+      if (choice === 'accepted') startAnalytics();
+      else if (analyticsLoaded) window.location.reload();
+    }
+    document.getElementById('acceptAnalytics').addEventListener('click', () => saveChoice('accepted'));
+    document.getElementById('rejectAnalytics').addEventListener('click', () => saveChoice('rejected'));
+    document.getElementById('privacySettings').addEventListener('click', () => { panel.hidden = false; });
+    let savedChoice = null;
+    try { savedChoice = localStorage.getItem(CONSENT_KEY); } catch (_) { /* private browsing */ }
+    if (savedChoice === 'accepted') startAnalytics();
+    else if (savedChoice !== 'rejected') panel.hidden = false;
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Finance Studio | ProcessLabSmart</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: #f1f5f9; color: #203247; }
+    header { background: #123e53; color: white; padding: 20px 6%; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
+    .brand { font-weight: bold; font-size: 19px; }
+    select { padding: 9px; border-radius: 7px; border: 1px solid #d0dbe2; font-size: 14px; }
+    main { max-width: 900px; margin: 65px auto; padding: 0 20px; text-align: center; }
+    h1 { font-size: clamp(30px, 5vw, 44px); margin-bottom: 12px; }
+    .motto { color: #237b80; font-weight: bold; font-size: 19px; }
+    .intro { color: #586b7d; line-height: 1.7; margin: 25px auto 35px; max-width: 650px; }
+    .panel { background: white; border-radius: 16px; padding: 32px; box-shadow: 0 4px 20px #20324712; }
+    .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+    .btn { display: inline-block; padding: 14px 22px; border: 0; border-radius: 9px; text-decoration: none; font-weight: bold; background: #e8f1f5; color: #18475c; cursor: pointer; font-size: 14px; }
+    .btn.primary { background: #126078; color: white; }
+    .btn:hover { filter: brightness(.94); }
+    .guides { border-top: 1px solid #e2e9ee; margin-top: 30px; padding-top: 24px; }
+    .note { font-size: 13px; color: #637789; line-height: 1.6; }
+    footer { margin: 45px 0 20px; text-align: center; color: #718394; font-size: 13px; }
+    .consent { position: fixed; bottom: 14px; left: 14px; right: 14px; max-width: 800px; margin: auto; padding: 20px; background: white; border: 1px solid #d3e1e8; border-radius: 12px; box-shadow: 0 5px 25px #123e5333; z-index: 10; }
+    .consent p { line-height: 1.55; margin: 8px 0 16px; font-size: 14px; }
+    .consent .actions { justify-content: flex-start; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">ProcessLabSmart</div>
+    <select id="language" aria-label="Language">
+      <option value="ro">Română</option>
+      <option value="en">English</option>
+    </select>
+  </header>
+  <main>
+    <h1>Personal Finance Studio</h1>
+    <p class="motto">Change with purpose. Improve with impact.</p>
+    <p class="intro" id="intro"></p>
+    <section class="panel">
+      <h2 id="startTitle"></h2>
+      <div class="actions">
+        <a class="btn primary" id="openApp" href="Personal_Finance_Studio_Public_Beta_06.html"></a>
+        <a class="btn" id="downloadApp" href="Personal_Finance_Studio_Public_Beta_06.html" download></a>
+      </div>
+      <div class="guides">
+        <h2 id="guideTitle"></h2>
+        <div class="actions">
+          <a class="btn" href="Ghid_Utilizare_Personal_Finance_Studio_Public_Beta_06.pdf" download>📄 Ghid Română (PDF)</a>
+          <a class="btn" href="Personal_Finance_Studio_Public_Beta_06_User_Guide_EN%20%281%29.pdf" download>📄 English Guide (PDF)</a>
+        </div>
+      </div>
+    </section>
+    <p class="note" id="privacy"></p>
+    <p><button class="btn" id="privacySettings" type="button"></button></p>
+  </main>
+  <footer>© ProcessLabSmart · Personal Finance Studio</footer>
+  <section class="consent" id="consentPanel" aria-label="Analytics preferences" hidden>
+    <strong id="consentTitle"></strong>
+    <p id="consentDescription"></p>
+    <div class="actions">
+      <button class="btn primary" id="acceptAnalytics" type="button"></button>
+      <button class="btn" id="rejectAnalytics" type="button"></button>
+    </div>
+  </section>
+  <script>
+    const GA_ID = 'G-SS2W8CH2J5';
+    const CONSENT_KEY = 'processlabsmart_analytics_consent_v1';
+    const translations = {
+      ro: {
+        intro: 'Planifică-ți bugetul, urmărește veniturile, cheltuielile și economiile și analizează-ți finanțele într-o aplicație simplă și intuitivă.',
+        startTitle: 'Începe să îți organizezi finanțele', openApp: 'Deschide aplicația', downloadApp: 'Descarcă aplicația HTML',
+        guideTitle: 'Ghiduri de utilizare',
+        privacy: 'Datele financiare sunt salvate local în browser. Folosește exportul JSON pentru copii de siguranță. Aplicația este în versiune de test.',
+        privacySettings: 'Preferințe de confidențialitate', consentTitle: 'Statistici opționale',
+        consentDescription: 'Cu acordul tău, folosim Google Analytics pentru a măsura vizitele și descărcările de pe această pagină. Nu transmitem valorile bugetului tău. Poți refuza sau schimba alegerea oricând.',
+        acceptAnalytics: 'Accept statistici', rejectAnalytics: 'Refuz statistici'
+      },
+      en: {
+        intro: 'Plan your budget, track your income, expenses and savings, and understand your finances with a simple and intuitive application.',
+        startTitle: 'Start managing your finances', openApp: 'Open Application', downloadApp: 'Download HTML Application',
+        guideTitle: 'User Guides',
+        privacy: 'Financial data is stored locally in your browser. Use JSON export for backups. This application is currently a beta version.',
+        privacySettings: 'Privacy preferences', consentTitle: 'Optional analytics',
+        consentDescription: 'With your permission, we use Google Analytics to measure visits and downloads on this page. We do not send your budget amounts. You may decline or change your choice at any time.',
+        acceptAnalytics: 'Accept analytics', rejectAnalytics: 'Decline analytics'
+      }
+    };
+    function setLanguage(lang) {
+      const t = translations[lang] || translations.ro;
+      document.documentElement.lang = lang;
+      ['intro','startTitle','openApp','downloadApp','guideTitle','privacy','privacySettings','consentTitle','consentDescription','acceptAnalytics','rejectAnalytics']
+        .forEach(id => { document.getElementById(id).textContent = t[id]; });
+    }
+    document.getElementById('language').addEventListener('change', e => setLanguage(e.target.value));
+    setLanguage('ro');
+
+    let analyticsLoaded = false;
+    function startAnalytics() {
+      if (analyticsLoaded) return;
+      analyticsLoaded = true;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function(){ window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA_ID, { send_page_view: true });
+      const script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+      document.head.appendChild(script);
+    }
+    const panel = document.getElementById('consentPanel');
+    function saveChoice(choice) {
+      try { localStorage.setItem(CONSENT_KEY, choice); } catch (_) { /* private browsing */ }
+      panel.hidden = true;
+      if (choice === 'accepted') startAnalytics();
+      else if (analyticsLoaded) window.location.reload();
+    }
+    document.getElementById('acceptAnalytics').addEventListener('click', () => saveChoice('accepted'));
+    document.getElementById('rejectAnalytics').addEventListener('click', () => saveChoice('rejected'));
+    document.getElementById('privacySettings').addEventListener('click', () => { panel.hidden = false; });
+    let savedChoice = null;
+    try { savedChoice = localStorage.getItem(CONSENT_KEY); } catch (_) { /* private browsing */ }
+    if (savedChoice === 'accepted') startAnalytics();
+    else if (savedChoice !== 'rejected') panel.hidden = false;
+  </script>
+</body>
+</html>
 
 <!DOCTYPE html>
 <html lang="ro">
