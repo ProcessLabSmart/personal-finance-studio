@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Personal Finance Studio | ProcessLabSmart</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #203247;
+    }
+    header {
+      background: #123e53;
+      color: white;
+      padding: 20px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+    .brand { font-weight: bold; font-size: 19px; }
+    select {
+      padding: 9px;
+      border-radius: 7px;
+      border: 1px solid #d0dbe2;
+      font-size: 14px;
+    }
+    main {
+      max-width: 900px;
+      margin: 65px auto;
+      padding: 0 20px;
+      text-align: center;
+    }
+    h1 { font-size: clamp(30px, 5vw, 44px); margin-bottom: 12px; }
+    .motto { color: #237b80; font-weight: bold; font-size: 19px; }
+    .intro { color: #586b7d; line-height: 1.7; margin: 25px auto 35px; max-width: 650px; }
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 20px #20324712;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 22px;
+      border-radius: 9px;
+      text-decoration: none;
+      font-weight: bold;
+      background: #e8f1f5;
+      color: #18475c;
+    }
+    .btn.primary { background: #126078; color: white; }
+    .btn:hover { filter: brightness(.94); }
+    .guides {
+      border-top: 1px solid #e2e9ee;
+      margin-top: 30px;
+      padding-top: 24px;
+    }
+    .note { font-size: 13px; color: #637789; line-height: 1.6; }
+    footer {
+      margin: 45px 0 20px;
+      text-align: center;
+      color: #718394;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">ProcessLabSmart</div>
+    <select id="language" aria-label="Language">
+      <option value="ro">Română</option>
+      <option value="en">English</option>
+    </select>
+  </header>
+
+  <main>
+    <h1>Personal Finance Studio</h1>
+    <p class="motto">Change with purpose. Improve with impact.</p>
+    <p class="intro" id="intro"></p>
+
+    <section class="panel">
+      <h2 id="startTitle"></h2>
+
+      <div class="actions">
+        <a class="btn primary"
+           id="openApp"
+           href="Personal_Finance_Studio_Public_Beta_06.html">
+        </a>
+        <a class="btn"
+           id="downloadApp"
+           href="Personal_Finance_Studio_Public_Beta_06.html"
+           download>
+        </a>
+      </div>
+
+      <div class="guides">
+        <h2 id="guideTitle"></h2>
+        <div class="actions">
+          <a class="btn"
+             href="Ghid_Utilizare_Personal_Finance_Studio_Public_Beta_06.pdf"
+             download>
+             📄 Ghid Română (PDF)
+          </a>
+          <a class="btn"
+             href="Personal_Finance_Studio_Public_Beta_06_User_Guide_EN%20%281%29.pdf"
+             download>
+             📄 English Guide (PDF)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <p class="note" id="privacy"></p>
+  </main>
+
+  <footer>
+    © ProcessLabSmart · Personal Finance Studio
+  </footer>
+
+  <script>
+    const translations = {
+      ro: {
+        intro: "Planifică-ți bugetul, urmărește veniturile, cheltuielile și economiile și analizează-ți finanțele într-o aplicație simplă și intuitivă.",
+        startTitle: "Începe să îți organizezi finanțele",
+        openApp: "Deschide aplicația",
+        downloadApp: "Descarcă aplicația HTML",
+        guideTitle: "Ghiduri de utilizare",
+        privacy: "Datele financiare sunt salvate local în browser. Folosește exportul JSON pentru copii de siguranță. Aplicația este în versiune de test."
+      },
+      en: {
+        intro: "Plan your budget, track your income, expenses and savings, and understand your finances with a simple and intuitive application.",
+        startTitle: "Start managing your finances",
+        openApp: "Open Application",
+        downloadApp: "Download HTML Application",
+        guideTitle: "User Guides",
+        privacy: "Financial data is stored locally in your browser. Use JSON export for backups. This application is currently a beta version."
+      }
+    };
+
+    function setLanguage(lang) {
+      const t = translations[lang] || translations.ro;
+      document.documentElement.lang = lang;
+      ["intro", "startTitle", "openApp",
+       "downloadApp", "guideTitle", "privacy"]
+        .forEach(id => {
+          document.getElementById(id).textContent = t[id];
+        });
+    }
+
+    document.getElementById("language")
+      .addEventListener("change", e => setLanguage(e.target.value));
+
+    setLanguage("ro");
+  </script>
+</body>
+</html>
